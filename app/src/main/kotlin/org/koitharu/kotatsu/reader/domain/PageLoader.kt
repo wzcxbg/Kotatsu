@@ -37,6 +37,7 @@ import org.koitharu.kotatsu.core.parser.MangaRepository
 import org.koitharu.kotatsu.core.prefs.AppSettings
 import org.koitharu.kotatsu.core.util.FileSize
 import org.koitharu.kotatsu.core.util.RetainedLifecycleCoroutineScope
+import org.koitharu.kotatsu.core.util.ext.URI_SCHEME_RAR
 import org.koitharu.kotatsu.core.util.ext.URI_SCHEME_ZIP
 import org.koitharu.kotatsu.core.util.ext.cancelChildrenAndJoin
 import org.koitharu.kotatsu.core.util.ext.compressToPNG
@@ -46,6 +47,7 @@ import org.koitharu.kotatsu.core.util.ext.getCompletionResultOrNull
 import org.koitharu.kotatsu.core.util.ext.isFileUri
 import org.koitharu.kotatsu.core.util.ext.isNotEmpty
 import org.koitharu.kotatsu.core.util.ext.isPowerSaveMode
+import org.koitharu.kotatsu.core.util.ext.isRarUri
 import org.koitharu.kotatsu.core.util.ext.isZipUri
 import org.koitharu.kotatsu.core.util.ext.mimeType
 import org.koitharu.kotatsu.core.util.ext.printStackTraceDebug
@@ -240,6 +242,12 @@ class PageLoader @Inject constructor(
 				uri
 			} else { // legacy uri
 				uri.buildUpon().scheme(URI_SCHEME_ZIP).build()
+			}
+
+			uri.isRarUri() -> if (uri.scheme == URI_SCHEME_RAR) {
+				uri
+			} else { // legacy uri
+				uri.buildUpon().scheme(URI_SCHEME_RAR).build()
 			}
 
 			uri.isFileUri() -> uri

@@ -33,6 +33,7 @@ import org.koitharu.kotatsu.BuildConfig
 import org.koitharu.kotatsu.browser.cloudflare.CaptchaNotifier
 import org.koitharu.kotatsu.core.db.MangaDatabase
 import org.koitharu.kotatsu.core.image.AvifImageDecoder
+import org.koitharu.kotatsu.core.image.CbrFetcher
 import org.koitharu.kotatsu.core.image.CbzFetcher
 import org.koitharu.kotatsu.core.image.MangaSourceHeaderInterceptor
 import org.koitharu.kotatsu.core.network.MangaHttpClient
@@ -129,6 +130,7 @@ interface AppModule {
 					}
 					add(SvgDecoder.Factory())
 					add(CbzFetcher.Factory())
+					add(CbrFetcher.Factory())
 					add(AvifImageDecoder.Factory())
 					add(FaviconFetcher.Factory(mangaRepositoryFactory))
 					add(MangaPageKeyer())

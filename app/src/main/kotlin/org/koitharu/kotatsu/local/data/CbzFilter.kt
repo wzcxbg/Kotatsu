@@ -13,3 +13,10 @@ fun hasZipExtension(string: String): Boolean {
 
 val File.isZipArchive: Boolean
 	get() = isFile && isZipExtension(extension)
+
+private fun isRarExtension(ext: String?): Boolean {
+	return ext.equals("rar", ignoreCase = true) || ext.equals("cbr", ignoreCase = true)
+}
+
+val File.isRarArchive: Boolean
+	get() = isFile && isRarExtension(extension)

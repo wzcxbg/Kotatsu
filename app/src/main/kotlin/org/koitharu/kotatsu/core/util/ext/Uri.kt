@@ -6,14 +6,21 @@ import okio.Path
 import java.io.File
 
 const val URI_SCHEME_ZIP = "file+zip"
+const val URI_SCHEME_RAR = "file+rar"
 private const val URI_SCHEME_FILE = "file"
 private const val URI_SCHEME_HTTP = "http"
 private const val URI_SCHEME_HTTPS = "https"
 private const val URI_SCHEME_LEGACY_CBZ = "cbz"
 private const val URI_SCHEME_LEGACY_ZIP = "zip"
+private const val URI_SCHEME_LEGACY_CBR = "cbr"
+private const val URI_SCHEME_LEGACY_RAR = "rar"
 
 fun Uri.isZipUri() = scheme.let {
 	it == URI_SCHEME_ZIP || it == URI_SCHEME_LEGACY_CBZ || it == URI_SCHEME_LEGACY_ZIP
+}
+
+fun Uri.isRarUri() = scheme.let {
+	it == URI_SCHEME_RAR || it == URI_SCHEME_LEGACY_CBR || it == URI_SCHEME_LEGACY_RAR
 }
 
 fun Uri.isFileUri() = scheme == URI_SCHEME_FILE

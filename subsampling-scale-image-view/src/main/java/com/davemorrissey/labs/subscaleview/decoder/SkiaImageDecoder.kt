@@ -5,11 +5,16 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
+import com.davemorrissey.labs.subscaleview.RarFileSystem
 import com.davemorrissey.labs.subscaleview.internal.URI_PATH_ASSET
 import com.davemorrissey.labs.subscaleview.internal.URI_SCHEME_CONTENT
 import com.davemorrissey.labs.subscaleview.internal.URI_SCHEME_FILE
+import com.davemorrissey.labs.subscaleview.internal.URI_SCHEME_RAR
 import com.davemorrissey.labs.subscaleview.internal.URI_SCHEME_RES
 import com.davemorrissey.labs.subscaleview.internal.URI_SCHEME_ZIP
+import okio.Path.Companion.toPath
+import okio.buffer
+import java.io.File
 import java.util.zip.ZipFile
 
 /**
@@ -36,6 +41,14 @@ public class SkiaImageDecoder @JvmOverloads constructor(
 				file.getInputStream(entry).use { input ->
 					BitmapFactory.decodeStream(input, null, options)
 				}
+			}
+
+			URI_SCHEME_RAR -> {
+				val rarFileSystem = RarFileSystem(File(uri.schemeSpecificPart))
+				rarFileSystem.source(uri.fragment!!.toPath())
+					.buffer().inputStream().use {
+						BitmapFactory.decodeStream(it, null, options)
+					}
 			}
 
 			URI_SCHEME_FILE -> {

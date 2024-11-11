@@ -18,8 +18,10 @@ import okio.openZip
 import org.jetbrains.annotations.Blocking
 import org.koitharu.kotatsu.core.model.LocalMangaSource
 import org.koitharu.kotatsu.core.util.AlphanumComparator
+import org.koitharu.kotatsu.core.util.ext.URI_SCHEME_RAR
 import org.koitharu.kotatsu.core.util.ext.URI_SCHEME_ZIP
 import org.koitharu.kotatsu.core.util.ext.isFileUri
+import org.koitharu.kotatsu.core.util.ext.isRarUri
 import org.koitharu.kotatsu.core.util.ext.isRegularFile
 import org.koitharu.kotatsu.core.util.ext.isZipUri
 import org.koitharu.kotatsu.core.util.ext.longHashCode
@@ -27,6 +29,8 @@ import org.koitharu.kotatsu.core.util.ext.printStackTraceDebug
 import org.koitharu.kotatsu.core.util.ext.toListSorted
 import org.koitharu.kotatsu.local.data.MangaIndex
 import org.koitharu.kotatsu.local.data.hasZipExtension
+import com.davemorrissey.labs.subscaleview.RarFileSystem
+import org.koitharu.kotatsu.local.data.isRarArchive
 import org.koitharu.kotatsu.local.data.isZipArchive
 import org.koitharu.kotatsu.local.data.output.LocalMangaOutput.Companion.ENTRY_NAME_INDEX
 import org.koitharu.kotatsu.local.domain.model.LocalManga
@@ -170,13 +174,16 @@ class LocalMangaParser(private val uri: Uri) {
 
 	private fun Uri.child(path: Path, resolve: Boolean): Uri {
 		val builder = buildUpon()
-		if (isZipUri() || !resolve) {
+		if (isZipUri() || isRarUri() || !resolve) {
 			builder.fragment(path.toString().removePrefix(Path.DIRECTORY_SEPARATOR))
 		} else {
 			val file = toFile()
 			if (file.isZipArchive) {
 				builder.fragment(path.toString().removePrefix(Path.DIRECTORY_SEPARATOR))
 				builder.scheme(URI_SCHEME_ZIP)
+			} else if (file.isRarArchive) {
+				builder.fragment(path.toString().removePrefix(Path.DIRECTORY_SEPARATOR))
+				builder.scheme(URI_SCHEME_RAR)
 			} else {
 				builder.appendEncodedPath(path.relativeTo(file.toOkioPath()).toString())
 			}
@@ -187,7 +194,10 @@ class LocalMangaParser(private val uri: Uri) {
 	companion object {
 
 		@Blocking
-		fun getOrNull(file: File): LocalMangaParser? = if ((file.isDirectory || file.isZipArchive) && file.canRead()) {
+		fun getOrNull(file: File): LocalMangaParser? = if ((
+				file.isDirectory || file.isZipArchive || file.isRarArchive)
+			&& file.canRead()
+		) {
 			LocalMangaParser(file)
 		} else {
 			null
@@ -231,7 +241,7 @@ class LocalMangaParser(private val uri: Uri) {
 
 		private fun Uri.resolve(): Uri = if (isFileUri()) {
 			val file = toFile()
-			if (file.isZipArchive) {
+			if (file.isZipArchive || file.isRarArchive) {
 				this
 			} else if (file.isDirectory) {
 				file.resolve(fragment.orEmpty()).toUri()
@@ -246,6 +256,10 @@ class LocalMangaParser(private val uri: Uri) {
 		private fun Uri.resolveFsAndPath(): Pair<FileSystem, Path> {
 			val resolved = resolve()
 			return when {
+				resolved.isRarUri() -> {
+					throw IllegalArgumentException("Unsupported uri")
+				}
+
 				resolved.isZipUri() -> {
 					FileSystem.SYSTEM.openZip(resolved.schemeSpecificPart.toPath()) to resolved.fragment.orEmpty()
 						.toRootedPath()
@@ -255,6 +269,8 @@ class LocalMangaParser(private val uri: Uri) {
 					val file = toFile()
 					if (file.isZipArchive) {
 						FileSystem.SYSTEM.openZip(schemeSpecificPart.toPath()) to fragment.orEmpty().toRootedPath()
+					} else if (file.isRarArchive) {
+						RarFileSystem(file) to fragment.orEmpty().toRootedPath()
 					} else {
 						FileSystem.SYSTEM to file.toOkioPath()
 					}

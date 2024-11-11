@@ -7,11 +7,17 @@ import android.graphics.*
 import android.net.Uri
 import android.text.TextUtils
 import androidx.annotation.WorkerThread
+import com.davemorrissey.labs.subscaleview.RarFileSystem
 import com.davemorrissey.labs.subscaleview.internal.URI_PATH_ASSET
 import com.davemorrissey.labs.subscaleview.internal.URI_SCHEME_CONTENT
 import com.davemorrissey.labs.subscaleview.internal.URI_SCHEME_FILE
+import com.davemorrissey.labs.subscaleview.internal.URI_SCHEME_RAR
 import com.davemorrissey.labs.subscaleview.internal.URI_SCHEME_RES
 import com.davemorrissey.labs.subscaleview.internal.URI_SCHEME_ZIP
+import okio.Path.Companion.toPath
+import okio.buffer
+import okio.use
+import java.io.File
 import java.util.concurrent.locks.Lock
 import java.util.concurrent.locks.ReadWriteLock
 import java.util.concurrent.locks.ReentrantReadWriteLock
@@ -67,6 +73,14 @@ public class SkiaImageRegionDecoder @JvmOverloads constructor(
 				file.getInputStream(entry).use { input ->
 					BitmapRegionDecoder(input, context, uri)
 				}
+			}
+
+			URI_SCHEME_RAR -> {
+				val rarFileSystem = RarFileSystem(File(uri.schemeSpecificPart))
+				rarFileSystem.source(uri.fragment!!.toPath())
+					.buffer().inputStream().use {
+						BitmapRegionDecoder(it, context, uri)
+					}
 			}
 
 			URI_SCHEME_FILE -> {

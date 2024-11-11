@@ -165,7 +165,6 @@ dependencies {
 	implementation libs.coil.gif
 	implementation libs.coil.svg
 	implementation libs.avif.decoder
-	implementation libs.ssiv
 	implementation libs.disk.lru.cache
 	implementation libs.markwon
 
@@ -173,6 +172,8 @@ dependencies {
 	implementation libs.acra.dialog
 
 	implementation libs.conscrypt.android
+
+	implementation project(':subsampling-scale-image-view')
 
 	debugImplementation libs.leakcanary.android
 	debugImplementation libs.workinspector

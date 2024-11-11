@@ -11,11 +11,12 @@ import coil3.request.Options
 import coil3.toAndroidUri
 import kotlinx.coroutines.runInterruptible
 import okio.Path.Companion.toPath
-import okio.openZip
-import org.koitharu.kotatsu.core.util.ext.isZipUri
+import org.koitharu.kotatsu.core.util.ext.isRarUri
+import com.davemorrissey.labs.subscaleview.RarFileSystem
+import java.io.File
 import coil3.Uri as CoilUri
 
-class CbzFetcher(
+class CbrFetcher(
 	private val uri: Uri,
 	private val options: Options,
 ) : Fetcher {
@@ -24,7 +25,7 @@ class CbzFetcher(
 		val filePath = uri.schemeSpecificPart.toPath()
 		val entryName = requireNotNull(uri.fragment)
 		SourceFetchResult(
-			source = ImageSource(entryName.toPath(), options.fileSystem.openZip(filePath)),
+			source = ImageSource(entryName.toPath(), RarFileSystem(File(filePath.toString()))),
 			mimeType = MimeTypeMap.getSingleton().getMimeTypeFromExtension(entryName.substringAfterLast('.', "")),
 			dataSource = DataSource.DISK,
 		)
@@ -38,8 +39,8 @@ class CbzFetcher(
 			imageLoader: ImageLoader
 		): Fetcher? {
 			val androidUri = data.toAndroidUri()
-			return if (androidUri.isZipUri()) {
-				CbzFetcher(androidUri, options)
+			return if (androidUri.isRarUri()) {
+				CbrFetcher(androidUri, options)
 			} else {
 				null
 			}
