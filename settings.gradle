@@ -29,4 +29,5 @@ dependencyResolutionManagement {
 }
 
 include ':app'
+include ':subsampling-scale-image-view'
 rootProject.name = "Kotatsu"

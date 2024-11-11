@@ -1,0 +1,78 @@
+plugins {
+	id 'com.android.library'
+	id 'kotlin-android'
+	id 'kotlin-parcelize'
+	id 'maven-publish'
+}
+
+group = 'com.davemorrissey.labs'
+archivesBaseName = 'subsampling-scale-image-view-androidx'
+version = '4.0'
+
+android {
+	compileSdk = 34
+	buildToolsVersion = '34.0.0'
+	namespace = 'com.davemorrissey.labs.subscaleview'
+
+    defaultConfig {
+		minSdk = 21
+		targetSdk = 34
+        consumerProguardFiles 'proguard-rules.txt'
+    }
+
+	compileOptions {
+		sourceCompatibility JavaVersion.VERSION_17
+		targetCompatibility JavaVersion.VERSION_17
+	}
+
+	kotlinOptions {
+		jvmTarget = JavaVersion.VERSION_17.toString()
+		freeCompilerArgs += '-Xexplicit-api=warning'
+	}
+
+	buildTypes {
+		release {
+			minifyEnabled false
+			proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+		}
+	}
+}
+
+configurations {
+    javadocs
+}
+
+dependencies {
+	implementation 'org.jetbrains.kotlin:kotlin-stdlib:2.0.10'
+    implementation "androidx.customview:customview:1.1.0"
+    javadocs 'androidx.annotation:annotation:1.8.2'
+    javadocs 'androidx.exifinterface:exifinterface:1.3.7'
+    implementation 'androidx.annotation:annotation:1.8.2'
+    implementation 'androidx.exifinterface:exifinterface:1.3.7'
+	implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.8.4'
+	implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.9.0-RC.2'
+}
+
+afterEvaluate {
+	publishing {
+		publications {
+			release(MavenPublication) {
+				from components.release
+				groupId = 'com.github.KotatsuApp'
+				artifactId = 'subsampling-scale-image-view-androidx'
+				version = '4.0'
+			}
+		}
+	}
+}
+
+task javadoc(type: Javadoc) {
+    failOnError false
+    source = android.sourceSets.main.java.sourceFiles
+    destinationDir = rootProject.file("docs/javadoc")
+    classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
+    classpath += configurations.implementation
+    classpath += configurations.javadocs
+    options.noTimestamp = true
+    options.links = ['https://developer.android.com/reference/']
+}
