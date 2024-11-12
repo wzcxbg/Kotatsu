@@ -59,6 +59,7 @@ class ChaptersPagesSheet : BaseAdaptiveSheet<SheetChaptersPagesBinding>(), Actio
 		(viewModel as? DetailsViewModel)?.let { dvm ->
 			ReadButtonDelegate(binding.splitButtonRead, dvm).attach(viewLifecycleOwner)
 		}
+		binding.pager.isUserInputEnabled = false
 		binding.pager.offscreenPageLimit = adapter.itemCount
 		binding.pager.recyclerView?.isNestedScrollingEnabled = false
 		binding.pager.adapter = adapter
