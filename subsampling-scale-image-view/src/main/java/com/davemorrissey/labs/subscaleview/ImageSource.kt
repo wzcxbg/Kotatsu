@@ -29,11 +29,11 @@ public sealed class ImageSource(
 	public var sHeight: Int = 0
 		protected set
 
-	public class Resource(@DrawableRes public val resourceId: Int) : ImageSource(true)
+	public class resource(@DrawableRes public val resourceId: Int) : ImageSource(true)
 
-	public class Uri(public val uri: AndroidUri) : ImageSource(true)
+	public class uri(public val uri: AndroidUri) : ImageSource(true)
 
-	public class Bitmap @JvmOverloads constructor(
+	public class bitmap @JvmOverloads constructor(
 		public val bitmap: AndroidBitmap,
 		public val isCached: Boolean = false,
 	) : ImageSource(false) {
@@ -59,7 +59,7 @@ public sealed class ImageSource(
 	public companion object {
 
 		@JvmStatic
-		public fun Uri(uri: String): Uri {
+		public fun Uri(uri: String): uri {
 			var uriString = uri
 			if (!uriString.contains("://")) {
 				if (uriString.startsWith("/")) {
@@ -67,19 +67,19 @@ public sealed class ImageSource(
 				}
 				uriString = "$SCHEME_FILE:///$uriString"
 			}
-			return Uri(AndroidUri.parse(uriString))
+			return uri(AndroidUri.parse(uriString))
 		}
 
 		@JvmStatic
-		public fun Asset(assetName: String): Uri = Uri(
+		public fun Asset(assetName: String): uri = uri(
 			AndroidUri.fromParts(URI_SCHEME_FILE, URI_PATH_ASSET + assetName, null),
 		)
 
 		@JvmStatic
-		public fun File(file: File): Uri = Uri(AndroidUri.fromFile(file))
+		public fun File(file: File): uri = uri(AndroidUri.fromFile(file))
 
 		@JvmStatic
-		public fun Zip(file: File, entry: String): Uri = Uri(
+		public fun Zip(file: File, entry: String): uri = uri(
 			AndroidUri.fromParts(URI_SCHEME_ZIP, file.absolutePath, entry),
 		)
 	}

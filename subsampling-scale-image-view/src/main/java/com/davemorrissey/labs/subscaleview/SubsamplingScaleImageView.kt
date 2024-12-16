@@ -384,7 +384,7 @@ public open class SubsamplingScaleImageView @JvmOverloads constructor(
 		} else {
 			val resId = ta.getResourceId(R.styleable.SubsamplingScaleImageView_src, 0)
 			if (resId != 0) {
-				setImage(ImageSource.Resource(resId))
+				setImage(ImageSource.resource(resId))
 			}
 		}
 		ta.recycle()
@@ -397,7 +397,7 @@ public open class SubsamplingScaleImageView @JvmOverloads constructor(
 		pendingState?.let { restoreState(it) }
 
 		if (previewSource != null) {
-			require(imageSource !is ImageSource.Bitmap) {
+			require(imageSource !is ImageSource.bitmap) {
 				"Preview image cannot be used when a bitmap is provided for the main image"
 			}
 			require(imageSource.sWidth > 0 && imageSource.sHeight > 0) {
@@ -407,15 +407,15 @@ public open class SubsamplingScaleImageView @JvmOverloads constructor(
 			this.sHeight = imageSource.sHeight
 			this.pRegion = previewSource.region
 			when (previewSource) {
-				is ImageSource.Bitmap -> {
+				is ImageSource.bitmap -> {
 					this.bitmapIsCached = previewSource.isCached
 					onPreviewLoaded(previewSource.bitmap)
 				}
 
 				else -> {
-					val uri = (previewSource as? ImageSource.Uri)?.uri ?: Uri.parse(
+					val uri = (previewSource as? ImageSource.uri)?.uri ?: Uri.parse(
 						ContentResolver.SCHEME_ANDROID_RESOURCE + "://" + context.packageName + "/" +
-							(previewSource as ImageSource.Resource).resourceId,
+							(previewSource as ImageSource.resource).resourceId,
 					)
 					loadBitmap(uri, true)
 				}
@@ -423,7 +423,7 @@ public open class SubsamplingScaleImageView @JvmOverloads constructor(
 		}
 
 		when (imageSource) {
-			is ImageSource.Bitmap -> {
+			is ImageSource.bitmap -> {
 				val region = imageSource.region
 				if (region != null) {
 					onImageLoaded(

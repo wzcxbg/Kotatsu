@@ -113,12 +113,12 @@ internal fun AssetManager.decodeBitmap(name: String, options: BitmapFactory.Opti
 }
 
 internal fun ImageSource.toUri(context: Context): Uri = when (this) {
-	is ImageSource.Resource -> Uri.parse(
+	is ImageSource.resource -> Uri.parse(
 		ContentResolver.SCHEME_ANDROID_RESOURCE + "://" + context.packageName + "/" + resourceId,
 	)
 
-	is ImageSource.Uri -> uri
-	is ImageSource.Bitmap -> throw IllegalArgumentException("Bitmap source cannot be represented as Uri")
+	is ImageSource.uri -> uri
+	is ImageSource.bitmap -> throw IllegalArgumentException("Bitmap source cannot be represented as Uri")
 }
 
 @Blocking
