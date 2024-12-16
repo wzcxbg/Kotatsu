@@ -1,1 +1,47 @@
 -keep class com.davemorrissey.labs.subscaleview.** { *; }
+
+-keep class java.lang.ClassLoader {*;}
+-keep class net.sf.sevenzipjbinding.SevenZipException {*;}
+
+-keep class net.sf.sevenzipjbinding.PropertyInfo {*;}
+-keep class net.sf.sevenzipjbinding.PropID {*;}
+-keep class net.sf.sevenzipjbinding.ISequentialOutStream {*;}
+-keep class net.sf.sevenzipjbinding.ISequentialInStream {*;}
+-keep class net.sf.sevenzipjbinding.IInStream {*;}
+-keep class net.sf.sevenzipjbinding.ICryptoGetTextPassword {*;}
+-keep class net.sf.sevenzipjbinding.IArchiveOpenVolumeCallback {*;}
+-keep class net.sf.sevenzipjbinding.ExtractAskMode {*;}
+-keep class net.sf.sevenzipjbinding.ExtractOperationResult {*;}
+
+-keep class net.sf.sevenzipjbinding.IInArchive {*;}
+-keep class net.sf.sevenzipjbinding.ISequentialOutStream {*;}
+-keep class net.sf.sevenzipjbinding.ISequentialInStream {*;}
+-keep class net.sf.sevenzipjbinding.IOutArchive {*;}
+-keep class net.sf.sevenzipjbinding.ArchiveFormat {*;}
+-keep class net.sf.sevenzipjbinding.impl.OutItemFactory {*;}
+-keep class net.sf.sevenzipjbinding.impl.OutItem {*;}
+-keep class net.sf.sevenzipjbinding.IOutItemBase {*;}
+
+-keep class net.sf.sevenzipjbinding.IArchiveOpenCallback {*;}
+-keep class net.sf.sevenzipjbinding.IProgress {*;}
+-keep class net.sf.sevenzipjbinding.IArchiveExtractCallback {*;}
+-keep class net.sf.sevenzipjbinding.IOutStream {*;}
+-keep class net.sf.sevenzipjbinding.ISeekableStream {*;}
+-keep class net.sf.sevenzipjbinding.IOutCreateCallback {*;}
+-keep class net.sf.sevenzipjbinding.impl.InArchiveImpl {*;}
+-keep class net.sf.sevenzipjbinding.impl.OutArchiveImpl {*;}
+
+-keep class java.lang.Object {*;}
+-keep class java.lang.Byte {*;}
+-keep class java.lang.Character {*;}
+-keep class java.lang.Short {*;}
+-keep class java.lang.Number {*;}
+-keep class java.lang.Integer {*;}
+-keep class java.lang.Long {*;}
+-keep class java.lang.Float {*;}
+-keep class java.lang.Double {*;}
+-keep class java.lang.Boolean {*;}
+-keep class java.lang.String {*;}
+-keep class java.lang.Throwable {*;}
+-keep class java.util.Date {*;}
+
