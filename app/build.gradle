@@ -44,6 +44,12 @@ android {
 			applicationIdSuffix = '.debug'
 		}
 		release {
+            signingConfig = signingConfigs.create("release") {
+                storeFile = file("./keystore.jks")
+                storePassword = "r8875748"
+                keyAlias = "Kotatsu"
+                keyPassword = "r8875748"
+            }
 			minifyEnabled true
 			shrinkResources true
 			proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
